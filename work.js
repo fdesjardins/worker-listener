@@ -1,14 +1,12 @@
 const express = require('express');
 const request = require('request');
 
+const sites = require('./sitelist').sites;
+
 const config = {
   host: 'localhost',
   port: 7176
 };
-
-const sites = [
-  'http://www.fillmurray.com/g/50/50'
-];
 
 app = express();
 app.get('/sites/:siteId', (req, res) => {
