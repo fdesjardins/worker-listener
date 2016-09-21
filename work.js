@@ -12,7 +12,15 @@ const sites = [
 
 app = express();
 app.get('/sites/:siteId', (req, res) => {
-  request(`${sites[req.params.siteId]}`).pipe(res);
+  const siteId = req.params.siteId
+
+  request(`${sites[siteId]}`)
+  .on('error', error => {
+    console.error(`error in request to site ${siteId}`, error);
+    res.status(504);
+    res.end('error with request');
+  })
+  .pipe(res);
 });
 
 app.listen(config.port, () => {
