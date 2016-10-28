@@ -9,7 +9,19 @@ const config = {
 
 const app = express();
 app.get('/sites/:siteId', (req, res) => {
-  request(`http://${config.host}:${config.workerPort}/sites/${req.params.siteId}`).pipe(res);
+  new Promise((resolve, reject) => {
+    request(`http://${config.host}:${config.workerPort}/sites/${req.params.siteId}`)
+      .on('error', (err) => {
+        reject(err)
+      })
+      .pipe(res);
+  })
+  .catch(err => {
+    res.status(500).send({
+      error: err,
+      message: 'error with request in listen.js'
+    });
+  });
 });
 
 app.listen(config.port, () => {

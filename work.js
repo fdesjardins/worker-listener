@@ -10,15 +10,21 @@ const config = {
 
 app = express();
 app.get('/sites/:siteId', (req, res) => {
-  const siteId = req.params.siteId
+  const siteId = req.params.siteId;
 
-  request(`${sites[siteId]}`)
-  .on('error', error => {
-    console.error(`error in request to site ${siteId}`, error);
-    res.status(504);
-    res.end('error with request');
+  new Promise((resolve, reject) => {
+    request(`${sites[siteId]}`)
+      .on('error', (err) => {
+        reject(err)
+      })
+      .pipe(res);
   })
-  .pipe(res);
+  .catch(err => {
+    res.status(500).send({
+      error: err,
+      message: 'error with request in work.js'
+    });
+  });
 });
 
 app.listen(config.port, () => {
