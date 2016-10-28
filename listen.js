@@ -9,8 +9,10 @@ const config = {
 
 const app = express();
 app.get('/sites/:siteId', (req, res) => {
+  const siteId = req.params.siteId;
+
   new Promise((resolve, reject) => {
-    request(`http://${config.host}:${config.workerPort}/sites/${req.params.siteId}`)
+    request(`http://${config.host}:${config.workerPort}/sites/${siteId}`)
       .on('error', (err) => {
         reject(err)
       })
